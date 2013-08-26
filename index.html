@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en" ng-app="DraftPickerApp">
+  <head>
+    <meta charset="utf-8">
+    <title>My AngularJS App</title>
+    <script data-require="jquery" data-semver="2.0.3" src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
+    <link data-require="jqueryui@1.10.0" data-semver="1.10.0" rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.0/css/smoothness/jquery-ui-1.10.0.custom.min.css" />
+    <script data-require="jqueryui@1.10.0" data-semver="1.10.0" src="http://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.0/jquery-ui.js"></script>
+    <link rel="stylesheet" href="app.css"/>
+    <link href="dist/css/bootstrap.css" rel="stylesheet" />
+    <script src="dist/js/bootstrap.js" type="text/javascript"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js" type="text/javascript"></script>
+
+    <script src="https://cdn.firebase.com/v0/firebase.js"></script>
+    <script src="http://firebase.github.io/angularFire/angularFire.js"></script>
+    <script src="app.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <div class="app" ng-controller="draftPickerCtrl">
+        <div class="row">
+          <div class="col-lg-6">
+            <div class="available">
+              <div>
+                <h3 ng-click='doReSort()'>Available Players</h3> 
+                <span class='text-info' ng-click='reset()'> Reset </span>
+              </div>
+              <table class='table table-hover table-condensed' cellspacing="0">
+                <tbody>
+                  <tr class='player '
+                      ng-repeat="player in players" 
+                      ng-class='byeWarnings(player)'
+                      >
+                    <td class="player_name" 
+                        ng-class='byeWarnings(player)'
+                        ng-click='selectPlayer($index)'> {{player}}</td>
+                    <td class="player_position">{{all_players[player].Position}}</td>
+                    <td class="player_team">{{all_players[player].Team}}</td>
+                    <td class="bye">{{getBye(player)}}</td>
+                    <td class="player_points">{{all_players[player]['2012_points']}}</td>
+                    <td ng-click='otherSelected($index)' 
+                        class="player_value">{{playerVal(all_players[player])}}</td>
+                    <td ng-click='otherPicked($index)'>
+                      <button type="button" 
+                              class="close" value="" name="" >&times;</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="col-lg-4 col-lg-offset-2">
+            <div class="requirements">
+              <h3>Needs</h3>
+              <ul class='list-unstyled'>
+                <li ng-repeat="(position, count) in current_needs">
+                <span><b>{{position}}:</b></span>
+                  {{count}}
+                </li>
+              </ul>
+            </div>
+            <div class="roster">
+              <h3>Roster</h3>
+              <table class='table table-hover table-condensed' cellspacing="0">
+                <thead>
+                  <th>Name</th>
+                  <th>Position</th>
+                  <th>Bye</th>
+                </thead>
+                <tbody>
+                  <tr class='pick' ng-repeat="pick in roster.selections">
+                    <td class="name">{{all_players[pick].Player}}</td>
+                    <td class="position">{{all_players[pick].Position}}</td>
+                    <td class='team'>{{all_players[pick].Team}}</td>
+                    <td class="bye">{{getBye(pick)}}</td>
+                    <td ng-click='removePlayer(pick)'>
+                      <button type="button" 
+                              class="close" value="" name="" >&times;</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
